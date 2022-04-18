@@ -8,6 +8,9 @@ let config = {
 //game declaration
 let game = new Phaser.Game(config);
 
+//reserve key vars
+let keyLEFT, keyRIGHT, keyUP, keyDOWN, keySPACE;
+
 /*
 Menu screen
 
