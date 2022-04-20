@@ -1,25 +1,12 @@
 class Menu extends Phaser.Scene {
     constructor() {
-        super("menuScene");
-    }
-
-    /*
-    preload() {
-        //load menu and tutorial sprites
-    }
-    */
-
-    create() {
-        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+      super("menuScene");
     }
     
-    /*
-    update() {
-        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
-            //switch sprite to tutorial
-            }
-            //play a sound?    
-        }
+    preload() {
+        
     }
-    */
-}
+    create() {
+      this.add.text(20, 20, "RUN MIREK RUN");
+    }
+  }
