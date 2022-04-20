@@ -4,9 +4,20 @@ class Menu extends Phaser.Scene {
     }
     
     preload() {
-        
+        this.load.image('menu', './assets/menu.png');
     }
+
     create() {
-      this.add.text(20, 20, "RUN MIREK RUN");
+        //display menu sprite
+        this.TitleScreen = this.add.tileSprite(0, 0, 1280, 960, 'menu').setOrigin(0, 0);
+
+        //define keys
+        keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    }
+
+    update() {
+        if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            this.scene.start('tutorialScene');
+        }
     }
   }
