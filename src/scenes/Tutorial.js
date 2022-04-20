@@ -1,5 +1,5 @@
 class Tutorial extends Phaser.Scene {
-    constructor() {
+    /*constructor() {
       super("tutorialScene");
     }
     
@@ -8,6 +8,7 @@ class Tutorial extends Phaser.Scene {
     }
 
     create() {
+        console.log("its tutorial time");
         //display tutorial sprite
         this.TitleScreen = this.add.tileSprite(0, 0, 1280, 960, 'tutorial').setOrigin(0, 0);
 
@@ -18,7 +19,8 @@ class Tutorial extends Phaser.Scene {
     update() {
         
         if (Phaser.Input.Keyboard.JustDown(keySPACE)) {
+            console.log("tutorial transition");
             this.scene.start('playScene');
         }
-    }
+    } */
   }
