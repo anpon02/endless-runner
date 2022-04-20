@@ -1,12 +1,9 @@
-class Play extends Phaser.scene {
+class Play extends Phaser.Scene {
     constructor() {
-        super("playScene");
+      super("playScene");
     }
-
+    
     create() {
-        keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
-        keyRIGHT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.RIGHT);
-        keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
-        keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+      this.add.text(20, 20, "PUNCH SAMMY");
     }
-}
+  }
