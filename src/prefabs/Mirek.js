@@ -3,18 +3,22 @@ class Mirek extends Phaser.GameObjects.Sprite {
     constructor(scene, x, y, texture, frame, keyLEFT, keyRIGHT, keyUPPER, keyDOWN) {
         super(scene, x, y, texture, frame);
 
+        //add object to existing scene
+        scene.add.existing(this);
         // track Mirek status...  Depends on how long each animation might be?
         this.isJumping = false;
         this.isSliding = false;
         this.isPunching = false;
         this.isDodging = false;
 
+        this.movespeed = 4;
+
         /* TODO: MIREK SFX 
-            this.sfxPunch = 
-            this.sfxJump (?) =
-            this.sfxSlide =
-            this.sfxDodge =
-            this.KO =      
+            this.sfxPunch = scene.sound.add('sfxPunch');
+            this.sfxJump (?) = scene.sound.add('sfxJump');
+            this.sfxSlide = scene.sound.add('sfxSlide');
+            this.sfxDodge = scene.sound.add('sfxDodge');
+            this.KO = scene.sound.add('sfxKO');
         */
        
         
@@ -46,5 +50,13 @@ class Mirek extends Phaser.GameObjects.Sprite {
             // ***********PERHAPS USE ONE-SHOT TIMER AS A COOLDOWN? NEED TO KNOW FRAMES*****************
             // this.sfxDodge.play();
         }
+    }
+
+    reset() {
+        this.isJumping = false;
+        this.isSliding = false;
+        this.isPunching = false;
+        this.isDodging = false;
+        //this.y = original position - to decide
     }
 }
