@@ -9,14 +9,10 @@ class Obstacles extends Phaser.GameObjects.Sprite {
     }
 
     update() {
-        this.x -= this.moveSpeed;
-        //wrap around edges
-        if(this.x <= 0 - this.width){
-            this.reset();
-        }  
+         
     }
 
     reset() {
-        this.x = game.config.width; 
+        
     }
 }
