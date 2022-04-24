@@ -7,6 +7,7 @@ class Play extends Phaser.Scene {
       this.load.image('backgroundtile', './assets/backgroundtile.png');
       this.load.image('foregroundtile', './assets/foregroundtile.png');
       this.load.image('mirek', './assets/mirek.png');
+      this.load.image('car', './assets/car.png');
       /*
       this.load.spritesheet(mirek runnin anim)
       this.load.spritesheet(mirek jumping anim)
@@ -24,11 +25,14 @@ class Play extends Phaser.Scene {
       //create backgrounds
       this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backgroundtile').setOrigin(0, 0);
       this.foregroundtile = this.add.tileSprite(0, gameheight-336, 640, 336, 'foregroundtile').setOrigin(0, 0);
-
+      
       //place mirek running anim; place everything else set alpha to 1
-      this.Mirek = new Mirek(this, game.config.width/3.5, game.config.height/1.5 - borderUISize - borderPadding, 'mirek', keyLEFT,
+      this.Mirek = new Mirek(this, game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding, 'mirek', keyLEFT,
           keyRIGHT, keyUP, keyDOWN).setOrigin(0.5, 0);
       console.log("mirek placed");
+
+      //place obstacles
+      this.car= new Obstacles(this, game.config.width, game.config.height/1.5- borderUISize- borderPadding, 'car', keyUP).setOrigin(0,0);
 
       //define keys
       keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
