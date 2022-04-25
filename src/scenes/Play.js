@@ -173,9 +173,21 @@ class Play extends Phaser.Scene {
         this.isDodging= false;
       }
       
+      if (this.checkCollision(this.Mirek, this.car)) {
+        console.log('shmack')
+      }
       
     }
 
+    // Collision Checking
+    checkCollision(Mirek, Obstacle) {
+      if (Mirek.x < Obstacle.x + Obstacle.width && Mirek.x + Mirek.width > Obstacle.x && Mirek.y < Obstacle.y + Obstacle.height && Mirek.height + Mirek.y > Obstacle.y && !this.isJumping) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+    
     onEvent(){
       this.car.go();
       console.log("CAR DEPLOYED");

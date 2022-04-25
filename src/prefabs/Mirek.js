@@ -46,13 +46,15 @@ class Mirek extends Phaser.GameObjects.Sprite {
             this.isJumping = true;
             // ***********PERHAPS USE ONE-SHOT TIMER AS A COOLDOWN?  NEED TO KNOW FRAMES*****************
             // this.sfxJump.play();
-            
+
         }
         if (Phaser.Input.Keyboard.JustDown(this.keyDown) && !this.isJumping && !this.isSliding && !this.isPunching && !this.isDodging) {
             this.isSliding = true;
             // ***********PERHAPS USE ONE-SHOT TIMER AS A COOLDOWN? NEED TO KNOW FRAMES*****************
             // this.sfxSlide.play();
         }
+
+
     }
 
     reset() {
