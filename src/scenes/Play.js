@@ -16,6 +16,7 @@ class Play extends Phaser.Scene {
       this.load.image('car', './assets/car.png');
       this.load.image('branch', './assets/branch.png');
       this.load.image('sammy', './assets/sammy.png');
+      this.load.image('slug', './assets/slug.png')
 
       /*
       this.load.spritesheet(mirek runnin anim)
@@ -79,6 +80,9 @@ class Play extends Phaser.Scene {
       this.sammy= new Obstacles(this, game.config.width, game.config.height/1.4  - borderUISize - borderPadding, 'sammy', 0, 'Sammy').setOrigin(0,0);
       console.log("sammy PLACED");
 
+      this.slug= new Obstacles(this, game.config.width, game.config.height/1.2  - borderUISize - borderPadding, 'slug', 0, 'Slug').setOrigin(0,0);
+      console.log("slug PLACED");
+
       //define vars
       this.isJumping= false;
       this.isDucking= false;
@@ -102,6 +106,7 @@ class Play extends Phaser.Scene {
       this.car.update();
       this.branch.update();
       this.sammy.update();
+      this.slug.update();
 
       
       if(!this.gameOver) {
@@ -198,20 +203,11 @@ class Play extends Phaser.Scene {
         this.isDodging= false;
       }
       
-      if (this.checkCollision(this.Mirek, this.car)) {
-        console.log('car shmack')
+      if (this.checkCollision(this.Mirek, this.car) || this.checkCollision(this.Mirek, this.branch) || this.checkCollision(this.Mirek, this.slug) || this.checkCollision(this.Mirek, this.sammy)) {
+        console.log('shmack')
         this.gameover();
       }
 
-      if (this.checkCollision(this.Mirek, this.branch)) {
-        console.log('branc shmack')
-        this.gameover();
-      }
-
-      if (this.checkCollision(this.Mirek, this.sammy)) {
-        console.log('sammy shmack')
-        this.gameover();
-      }
       
     }
 
@@ -243,6 +239,13 @@ class Play extends Phaser.Scene {
         }
       }
       //check if obstacle is Slug
+      if(Obstacle.obstacleType == 'Slug'){ 
+        if (Mirek.x < Obstacle.x + Obstacle.width && Mirek.x + .2 * Mirek.width > Obstacle.x && Mirek.y < Obstacle.y + Obstacle.height && Mirek.height + Mirek.y > Obstacle.y && !this.isDodging) {
+          return true;
+        } else {
+          return false;
+        }
+      }
     }
     
     onEvent(){
@@ -251,11 +254,14 @@ class Play extends Phaser.Scene {
       if(this.randNum == 0){
         this.car.go();
       }
-      if(this.randNum == 1 || this.randNum == 3){
+      if(this.randNum == 1 ){
         this.branch.go();
       }
       if(this.randNum == 2){
         this.sammy.go();
+      }
+      if(this.randNum == 3){
+        this.slug.go();
       }
 
       console.log("OBJ DEPLOYED:" + this.randNum);
@@ -267,6 +273,7 @@ class Play extends Phaser.Scene {
         this.car.updateSpeed(this.speed);
         this.branch.updateSpeed(this.speed);
         this.sammy.updateSpeed(this.speed);
+        this.slug.updateSpeed(this.speed);
       }
       
     }
