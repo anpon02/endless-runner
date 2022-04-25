@@ -166,4 +166,8 @@ class Play extends Phaser.Scene {
       }
       
     }
+
+    gameover(){
+      this.gameOver = true;
+    }
   }
