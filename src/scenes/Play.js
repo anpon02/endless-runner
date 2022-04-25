@@ -14,6 +14,9 @@ class Play extends Phaser.Scene {
       this.load.image('mirekDodging', './assets/mirekDodging.png');
 
       this.load.image('car', './assets/car.png');
+      this.load.image('branch', './assets/branch.png');
+      this.load.image('sammy', './assets/sammy.png');
+
       /*
       this.load.spritesheet(mirek runnin anim)
       this.load.spritesheet(mirek jumping anim)
@@ -28,7 +31,7 @@ class Play extends Phaser.Scene {
       //animation config
       this.anims.create({
         key: 'MirekRun',
-        frames: this.anims.generateFrameNumbers('MirekRun', {start: 0, end: 3, first: 0}), frameRate: 15
+        frames: this.anims.generateFrameNumbers('MirekRun', {start: 0, end: 3, first: 0}), frameRate: 6
       });
 
       //define keys
@@ -51,24 +54,30 @@ class Play extends Phaser.Scene {
       console.log("mirek placed"); 
       commented out because I think we can make the game work without a Mirek Class*/
       
-      this.Mirek = this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,'MirekRun').setOrigin(0.5, 0);
+      this.Mirek = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,'MirekRun').setOrigin(0.5, 0);
 
       //add alt animations
-      this.MirekJumping = this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,  'mirekJumping').setOrigin(0.5, 0);
+      this.MirekJumping = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekJumping').setOrigin(0.5, 0);
       this.MirekJumping.alpha=0;
 
-      this.MirekDucking = this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,  'mirekDucking').setOrigin(0.5, 0);
+      this.MirekDucking = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekDucking').setOrigin(0.5, 0);
       this.MirekDucking.alpha=0;
 
-      this.MirekPunching = this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,  'mirekPunching').setOrigin(0.5, 0);
+      this.MirekPunching = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekPunching').setOrigin(0.5, 0);
       this.MirekPunching.alpha=0;
       
-      this.MirekDodging = this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,  'mirekDodging').setOrigin(0.5, 0);
+      this.MirekDodging = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekDodging').setOrigin(0.5, 0);
       this.MirekDodging.alpha=0;
 
       //place obstacles
-      this.car= new Obstacles(this, game.config.width-100, game.config.height/1.4  - borderUISize - borderPadding, 'car', this.keyUP).setOrigin(0,0);
+      this.car= new Obstacles(this, game.config.width, game.config.height/1.3  - borderUISize - borderPadding, 'car', 0, 'Car').setOrigin(0,0);
       console.log("CAR PLACED");
+
+      this.branch= new Obstacles(this, game.config.width, game.config.height/1.5  - borderUISize - borderPadding, 'branch', 0, 'Branch').setOrigin(0,0);
+      console.log("branch PLACED");
+
+      this.sammy= new Obstacles(this, game.config.width, game.config.height/1.4  - borderUISize - borderPadding, 'sammy', 0, 'Sammy').setOrigin(0,0);
+      console.log("sammy PLACED");
 
       //define vars
       this.isJumping= false;
@@ -79,6 +88,9 @@ class Play extends Phaser.Scene {
       // Timed car spawning event
       this.carSpawnEvent = this.time.addEvent({delay: 5000, callback: this.onEvent, callbackScope: this, loop: true});
 
+      //Timed speed increase event
+      this.speedUp = this.time.addEvent({delay: 10000, callback: this.speedUp, callbackScope: this, loop: true});
+
       //game over flag
       this.gameOver = false;
     }
@@ -88,12 +100,12 @@ class Play extends Phaser.Scene {
       this.foregroundtile.tilePositionX += this.speed;
 
       this.car.update();
-
-      //var summonobstacle = setInterval(this.onEvent, 5000);
+      this.branch.update();
+      this.sammy.update();
 
       
       if(!this.gameOver) {
-        this.Mirek.anims.play('MirekRun');
+        this.Mirek.anims.play('MirekRun', 1, true);
       }
 
       //jump
@@ -187,7 +199,17 @@ class Play extends Phaser.Scene {
       }
       
       if (this.checkCollision(this.Mirek, this.car)) {
-        console.log('shmack')
+        console.log('car shmack')
+        this.gameover();
+      }
+
+      if (this.checkCollision(this.Mirek, this.branch)) {
+        console.log('branc shmack')
+        this.gameover();
+      }
+
+      if (this.checkCollision(this.Mirek, this.sammy)) {
+        console.log('sammy shmack')
         this.gameover();
       }
       
@@ -195,16 +217,58 @@ class Play extends Phaser.Scene {
 
     // Collision Checking
     checkCollision(Mirek, Obstacle) {
-      if (Mirek.x < Obstacle.x + Obstacle.width && Mirek.x + Mirek.width > Obstacle.x && Mirek.y < Obstacle.y + Obstacle.height && Mirek.height + Mirek.y > Obstacle.y && !this.isJumping) {
-        return true;
-      } else {
-        return false;
+      //check if Obstacle is Car
+      if(Obstacle.obstacleType == 'Car'){ 
+        if (Mirek.x < Obstacle.x + Obstacle.width && Mirek.x + .2 * Mirek.width > Obstacle.x && Mirek.y < Obstacle.y + Obstacle.height && Mirek.height + Mirek.y > Obstacle.y && !this.isJumping) {
+          return true;
+        } else {
+          return false;
+        }
       }
+
+      //check if obstacle is Branch
+      if(Obstacle.obstacleType == 'Branch'){ 
+        if (Mirek.x < Obstacle.x + Obstacle.width && Mirek.x + .2 * Mirek.width > Obstacle.x && Mirek.y < Obstacle.y + Obstacle.height && Mirek.height + Mirek.y > Obstacle.y && !this.isDucking) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      //check if obstacle is Sammy
+      if(Obstacle.obstacleType == 'Sammy'){ 
+        if (Mirek.x < Obstacle.x + Obstacle.width && Mirek.x + .2 * Mirek.width > Obstacle.x && Mirek.y < Obstacle.y + Obstacle.height && Mirek.height + Mirek.y > Obstacle.y && !this.isPunching) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+      //check if obstacle is Slug
     }
     
     onEvent(){
-      this.car.go();
-      console.log("CAR DEPLOYED");
+
+      this.randNum= Math.floor(Math.random()*4);
+      if(this.randNum == 0){
+        this.car.go();
+      }
+      if(this.randNum == 1 || this.randNum == 3){
+        this.branch.go();
+      }
+      if(this.randNum == 2){
+        this.sammy.go();
+      }
+
+      console.log("OBJ DEPLOYED:" + this.randNum);
+    }
+
+    speedUp(){
+      this.speed+= 1;
+      if(this.speed< 16){
+        this.car.updateSpeed(this.speed);
+        this.branch.updateSpeed(this.speed);
+        this.sammy.updateSpeed(this.speed);
+      }
+      
     }
 
     gameover(){
