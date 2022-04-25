@@ -6,7 +6,8 @@ class Play extends Phaser.Scene {
     preload() {
       this.load.image('backgroundtile', './assets/backgroundtile.png');
       this.load.image('foregroundtile', './assets/foregroundtile.png');
-      this.load.image('mirek', './assets/mirek.png');
+      this.load.image('mirek', './assets/mirek.png'); //replaced by MirekRunning
+      //this.load.spritesheet('MirekRun', './assets/MirekRunSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
       this.load.image('mirekJumping', './assets/mirekJumping.png');
       this.load.image('mirekDucking', './assets/mirekDucking.png');
       this.load.image('mirekPunching', './assets/mirekPunching.png');
@@ -44,8 +45,8 @@ class Play extends Phaser.Scene {
       console.log("mirek placed"); 
       commented out because I think we can make the game work without a Mirek Class*/
       
-      this.Mirek= this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,'mirek').setOrigin(0.5, 0);
-      
+      this.Mirek = this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,'mirek').setOrigin(0.5, 0);
+
       //add alt animations
       this.MirekJumping = this.add.sprite(game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding,  'mirekJumping').setOrigin(0.5, 0);
       this.MirekJumping.alpha=0;
@@ -71,6 +72,9 @@ class Play extends Phaser.Scene {
 
       // Timed car spawning event
       this.carSpawnEvent = this.time.addEvent({delay: 5000, callback: this.onEvent, callbackScope: this, loop: true});
+
+      //game over flag
+      this.gameOver = false;
     }
 
     update() {
@@ -82,6 +86,9 @@ class Play extends Phaser.Scene {
       //var summonobstacle = setInterval(this.onEvent, 5000);
 
       
+      // if(!this.gameOver) {
+      //   this.Mirek.anims.play('MirekRun');
+      // }
 
       //jump
       if(Phaser.Input.Keyboard.JustDown(this.keyUP) && !Phaser.Input.Keyboard.JustDown(this.keyRIGHT) && !Phaser.Input.Keyboard.JustDown(this.keyLEFT) && !Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
