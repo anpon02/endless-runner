@@ -69,11 +69,15 @@ class Play extends Phaser.Scene {
       this.isPunching= false;
       this.isDodging=false;
 
+      // Timed car spawning event
+      this.carSpawnEvent = this.time.addEvent({delay: 5000, callback: this.onEvent, callbackScope: this, loop: true});
     }
 
     update() {
       this.backgroundsprite.tilePositionX += this.speed/4;
       this.foregroundtile.tilePositionX += this.speed;
+
+      this.car.update()
 
       //jump
       if(Phaser.Input.Keyboard.JustDown(this.keyUP) && !Phaser.Input.Keyboard.JustDown(this.keyRIGHT) && !Phaser.Input.Keyboard.JustDown(this.keyLEFT) && !Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
@@ -165,5 +169,10 @@ class Play extends Phaser.Scene {
         this.isDodging= false;
       }
       
+      
+    }
+    onEvent(){
+      this.car= new Obstacles(this, game.config.width-100, game.config.height/1.4  - borderUISize - borderPadding, 'car', this.keyUP).setOrigin(0,0);
+      console.log("CAR PLACED");
     }
   }
