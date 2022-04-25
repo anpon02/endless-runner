@@ -175,6 +175,7 @@ class Play extends Phaser.Scene {
       
       if (this.checkCollision(this.Mirek, this.car)) {
         console.log('shmack')
+        this.gameover();
       }
       
     }
@@ -195,5 +196,7 @@ class Play extends Phaser.Scene {
 
     gameover(){
       this.gameOver = true;
+      console.log("game over, switching back to menu");
+      this.scene.start('menuScene');
     }
   }
