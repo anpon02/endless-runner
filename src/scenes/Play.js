@@ -77,7 +77,11 @@ class Play extends Phaser.Scene {
       this.backgroundsprite.tilePositionX += this.speed/4;
       this.foregroundtile.tilePositionX += this.speed;
 
-      this.car.update()
+      this.car.update();
+
+      //var summonobstacle = setInterval(this.onEvent, 5000);
+
+      
 
       //jump
       if(Phaser.Input.Keyboard.JustDown(this.keyUP) && !Phaser.Input.Keyboard.JustDown(this.keyRIGHT) && !Phaser.Input.Keyboard.JustDown(this.keyLEFT) && !Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
@@ -171,9 +175,10 @@ class Play extends Phaser.Scene {
       
       
     }
+
     onEvent(){
-      this.car= new Obstacles(this, game.config.width-100, game.config.height/1.4  - borderUISize - borderPadding, 'car', this.keyUP).setOrigin(0,0);
-      console.log("CAR PLACED");
+      this.car.go();
+      console.log("CAR DEPLOYED");
     }
 
     gameover(){

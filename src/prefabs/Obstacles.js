@@ -4,20 +4,29 @@ class Obstacles extends Phaser.GameObjects.Sprite {
 
         //add object to existing scene
         scene.add.existing(this);
-        
+        this.originalX= this.x;
         this.reactionKey= reactionKey;
-        this.moveSpeed = 3;
+        this.moveSpeed = 4;
+        this.isGoing= false;
     }
 
     update() {
-         this.x -= this.moveSpeed;
+        if(this.isGoing){
+            this.x -= this.moveSpeed;
+        }
+         
 
          // despawn object if off-screen, no leaks!
          if (this.x <= 0 - this.width){
-            console.log('BEGONE')
-            this.destroy();
+            this.x= this.originalX;
+            this.isGoing= false;
          }
     }
+
+    go(){
+        this.isGoing= true;
+    }
+
 
     reset() {
         
