@@ -124,6 +124,7 @@ class Play extends Phaser.Scene {
       if(Phaser.Input.Keyboard.JustDown(this.keyUP) && !Phaser.Input.Keyboard.JustDown(this.keyRIGHT) && !Phaser.Input.Keyboard.JustDown(this.keyLEFT) && !Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
         this.Mirek.alpha= 0;
         this.MirekJumping.alpha=1;
+        //this.MirekJumping.anims.play('MirekJump', 1, true);
         this.MirekDucking.alpha= 0;
         this.MirekPunching.alpha=0;
         this.MirekDodging.alpha=0;
