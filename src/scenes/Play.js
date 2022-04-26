@@ -8,7 +8,8 @@ class Play extends Phaser.Scene {
       this.load.image('foregroundtile', './assets/foregroundtile.png');
       //this.load.image('mirek', './assets/mirek.png'); //replaced by MirekRunning
       this.load.spritesheet('MirekRun', './assets/MirekRunSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
-      this.load.image('mirekJumping', './assets/mirekJumping.png');
+      this.load.spritesheet('MirekJump', './assets/MirekJumpSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 6});
+      //this.load.image('mirekJumping', './assets/mirekJumping.png');
       this.load.image('mirekDucking', './assets/mirekDucking.png');
       this.load.image('mirekPunching', './assets/mirekPunching.png');
       this.load.image('mirekDodging', './assets/mirekDodging.png');
@@ -35,6 +36,11 @@ class Play extends Phaser.Scene {
         frames: this.anims.generateFrameNumbers('MirekRun', {start: 0, end: 3, first: 0}), frameRate: 6
       });
 
+      this.anims.create({
+        key: 'MirekJump',
+        frames: this.anims.generateFrameNumbers('MirekJump', {start: 0, end: 3, first: 0}), frameRate: 2
+      });
+
       //define keys
       this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       this.keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -58,7 +64,7 @@ class Play extends Phaser.Scene {
       this.Mirek = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,'MirekRun').setOrigin(0.5, 0);
 
       //add alt animations
-      this.MirekJumping = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekJumping').setOrigin(0.5, 0);
+      this.MirekJumping = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'MirekJump').setOrigin(0.5, 0);
       this.MirekJumping.alpha=0;
 
       this.MirekDucking = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekDucking').setOrigin(0.5, 0);
@@ -111,6 +117,7 @@ class Play extends Phaser.Scene {
       
       if(!this.gameOver) {
         this.Mirek.anims.play('MirekRun', 1, true);
+        this.MirekJumping.anims.play('MirekJump', 1, true);
       }
 
       //jump
