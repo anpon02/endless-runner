@@ -38,7 +38,7 @@ class Play extends Phaser.Scene {
 
       this.anims.create({
         key: 'MirekJump',
-        frames: this.anims.generateFrameNumbers('MirekJump', {start: 0, end: 3, first: 0}), frameRate: 2
+        frames: this.anims.generateFrameNumbers('MirekJump', {start: 0, end: 3, first: 0}), frameRate: 3
       });
 
       //define keys
