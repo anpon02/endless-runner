@@ -151,6 +151,7 @@ class Play extends Phaser.Scene {
       if(!this.gameOver) {
         this.Mirek.anims.play('MirekRun', 1, true);
         this.MirekJumping.anims.play('MirekJump', 1, true);
+        this.highscore += 1;
       }
 
       //jump
