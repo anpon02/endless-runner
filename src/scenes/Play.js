@@ -4,11 +4,12 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
-      this.load.image('backgroundtile', './assets/backgroundtile.png');
-      this.load.image('foregroundtile', './assets/foregroundtile.png');
+      this.load.image('backTrees', './assets/backTrees.png');
+      this.load.image('frontTrees', './assets/frontTrees.png');
       //this.load.image('mirek', './assets/mirek.png'); //replaced by MirekRunning
       this.load.spritesheet('MirekRun', './assets/MirekRunSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
-      this.load.image('mirekJumping', './assets/mirekJumping.png');
+      this.load.spritesheet('MirekJump', './assets/MirekJumpSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 6});
+      //this.load.image('mirekJumping', './assets/mirekJumping.png');
       this.load.image('mirekDucking', './assets/mirekDucking.png');
       this.load.image('mirekPunching', './assets/mirekPunching.png');
       this.load.image('mirekDodging', './assets/mirekDodging.png');
@@ -35,6 +36,11 @@ class Play extends Phaser.Scene {
         frames: this.anims.generateFrameNumbers('MirekRun', {start: 0, end: 3, first: 0}), frameRate: 6
       });
 
+      this.anims.create({
+        key: 'MirekJump',
+        frames: this.anims.generateFrameNumbers('MirekJump', {start: 0, end: 3, first: 0}), frameRate: 3
+      });
+
       //define keys
       this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
       this.keyLEFT = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.LEFT);
@@ -42,12 +48,16 @@ class Play extends Phaser.Scene {
       this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
       this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
+      //scorekeeping
+      this.highscore = 0;
       //speed will be updated over time to make the game more challenging
       this.speed= 2;
       
       //create backgrounds
-      this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backgroundtile').setOrigin(0, 0);
-      this.foregroundtile = this.add.tileSprite(0, gameheight-336, 640, 336, 'foregroundtile').setOrigin(0, 0);
+      this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backTrees').setOrigin(0, 0);
+      this.foregroundtile = this.add.tileSprite(0, 0, gamewidth, gameheight, 'frontTrees').setOrigin(0, 0);
+
+      this.displayscore = this.add.text(16, 16, 'score: ', { fontSize: '32px', fill: '#000' });
       
       //place mirek running anim; place everything else set alpha to 1
       /*this.Mirek = new Mirek(this, game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding, 'mirek', keyLEFT,
@@ -58,7 +68,7 @@ class Play extends Phaser.Scene {
       this.Mirek = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,'MirekRun').setOrigin(0.5, 0);
 
       //add alt animations
-      this.MirekJumping = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekJumping').setOrigin(0.5, 0);
+      this.MirekJumping = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'MirekJump').setOrigin(0.5, 0);
       this.MirekJumping.alpha=0;
 
       this.MirekDucking = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,  'mirekDucking').setOrigin(0.5, 0);
@@ -90,16 +100,46 @@ class Play extends Phaser.Scene {
       this.isDodging=false;
 
       // Timed car spawning event
-      this.carSpawnEvent = this.time.addEvent({delay: 5000, callback: this.onEvent, callbackScope: this, loop: true});
+      this.carSpawnEvent = this.time.addEvent({delay: 5000, callback: () => { this.randNum= Math.floor(Math.random()*4);
+        if(this.randNum == 0){
+          this.car.go();
+        }
+        if(this.randNum == 1 ){
+          this.branch.go();
+        }
+        if(this.randNum == 2){
+          this.sammy.go();
+        }
+        if(this.randNum == 3){
+          this.slug.go();
+        }
+  
+        console.log("OBJ DEPLOYED:" + this.randNum);
+      }, callbackScope: this, loop: true});
 
       //Timed speed increase event
-      this.speedUp = this.time.addEvent({delay: 10000, callback: this.speedUp, callbackScope: this, loop: true});
+      this.speedUp = this.time.addEvent({delay: 10000, callback: () => {     
+        this.speed+= 1;
+        if(this.speed< 16){
+          this.car.updateSpeed(this.speed);
+          this.branch.updateSpeed(this.speed);
+          this.sammy.updateSpeed(this.speed);
+          this.slug.updateSpeed(this.speed);
+        }}, callbackScope: this, loop: true});
 
       //game over flag
       this.gameOver = false;
+
+      this.countdown = 3000;
+
+      //looping bgm
+      this.bgMusic = this.sound.add('bgm_runMirek');
+      this.bgMusic.loop = true;
+      this.bgMusic.volume = .5;
+      this.bgMusic.play();
     }
 
-    update() {
+    update(timer, delta) {
       this.backgroundsprite.tilePositionX += this.speed/4;
       this.foregroundtile.tilePositionX += this.speed;
 
@@ -107,16 +147,27 @@ class Play extends Phaser.Scene {
       this.branch.update();
       this.sammy.update();
       this.slug.update();
-
+   
       
       if(!this.gameOver) {
         this.Mirek.anims.play('MirekRun', 1, true);
+        this.MirekJumping.anims.play('MirekJump', 1, true);
+        this.countdown -= 250;
       }
+
+      //scorekeeping
+      if (this.countdown <= 0) {
+        this.highscore += 1;
+        this.displayscore.setText('score: ' + this.highscore);
+        this.countdown = 3000;
+      }
+      
 
       //jump
       if(Phaser.Input.Keyboard.JustDown(this.keyUP) && !Phaser.Input.Keyboard.JustDown(this.keyRIGHT) && !Phaser.Input.Keyboard.JustDown(this.keyLEFT) && !Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
         this.Mirek.alpha= 0;
         this.MirekJumping.alpha=1;
+        //this.MirekJumping.anims.play('MirekJump', 1, true);
         this.MirekDucking.alpha= 0;
         this.MirekPunching.alpha=0;
         this.MirekDodging.alpha=0;
@@ -149,6 +200,8 @@ class Play extends Phaser.Scene {
         this.isDucking= true;
         this.isPunching= false;
         this.isDodging=false;
+
+        this.sound.play('sfx_slide');
       }
 
       //dodge to run transition
@@ -171,6 +224,8 @@ class Play extends Phaser.Scene {
         this.isDucking= false;
         this.isPunching= true;
         this.isDodging=false;
+
+        this.sound.play('sfx_punch');
       }
 
       //punch to run transition
@@ -194,6 +249,8 @@ class Play extends Phaser.Scene {
         this.isDucking= false;
         this.isPunching= false;
         this.isDodging=true;
+
+        this.sound.play('sfx_whiff');
       }
 
       //dodge to run transition
@@ -205,6 +262,7 @@ class Play extends Phaser.Scene {
       
       if (this.checkCollision(this.Mirek, this.car) || this.checkCollision(this.Mirek, this.branch) || this.checkCollision(this.Mirek, this.slug) || this.checkCollision(this.Mirek, this.sammy)) {
         console.log('shmack')
+        this.bgMusic.stop();
         this.gameover();
       }
 
@@ -248,7 +306,7 @@ class Play extends Phaser.Scene {
       }
     }
     
-    onEvent(){
+    onEvent(event){
 
       this.randNum= Math.floor(Math.random()*4);
       if(this.randNum == 0){
@@ -281,6 +339,8 @@ class Play extends Phaser.Scene {
     gameover(){
       this.gameOver = true;
       console.log("game over, switching back to menu");
+      this.carSpawnEvent.remove();
+      this.speedUp.remove();
       this.scene.start('menuScene');
     }
   }
