@@ -57,7 +57,7 @@ class Play extends Phaser.Scene {
       this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backTrees').setOrigin(0, 0);
       this.foregroundtile = this.add.tileSprite(0, 0, gamewidth, gameheight, 'frontTrees').setOrigin(0, 0);
 
-      this.displayscore = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
+      this.displayscore = this.add.text(16, 16, 'score: ', { fontSize: '32px', fill: '#000' });
       
       //place mirek running anim; place everything else set alpha to 1
       /*this.Mirek = new Mirek(this, game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding, 'mirek', keyLEFT,
@@ -130,6 +130,8 @@ class Play extends Phaser.Scene {
       //game over flag
       this.gameOver = false;
 
+      this.countdown = 3000;
+
       //looping bgm
       this.bgMusic = this.sound.add('bgm_runMirek');
       this.bgMusic.loop = true;
@@ -137,7 +139,7 @@ class Play extends Phaser.Scene {
       this.bgMusic.play();
     }
 
-    update() {
+    update(timer, delta) {
       this.backgroundsprite.tilePositionX += this.speed/4;
       this.foregroundtile.tilePositionX += this.speed;
 
@@ -145,14 +147,21 @@ class Play extends Phaser.Scene {
       this.branch.update();
       this.sammy.update();
       this.slug.update();
-
-      
+   
       
       if(!this.gameOver) {
         this.Mirek.anims.play('MirekRun', 1, true);
         this.MirekJumping.anims.play('MirekJump', 1, true);
-        this.highscore += 1;
+        this.countdown -= 250;
       }
+
+      //scorekeeping
+      if (this.countdown <= 0) {
+        this.highscore += 1;
+        this.displayscore.setText('score: ' + this.highscore);
+        this.countdown = 3000;
+      }
+      
 
       //jump
       if(Phaser.Input.Keyboard.JustDown(this.keyUP) && !Phaser.Input.Keyboard.JustDown(this.keyRIGHT) && !Phaser.Input.Keyboard.JustDown(this.keyLEFT) && !Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
