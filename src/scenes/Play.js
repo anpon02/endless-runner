@@ -103,6 +103,12 @@ class Play extends Phaser.Scene {
 
       //game over flag
       this.gameOver = false;
+
+        //looping bgm
+      this.bgMusic = this.sound.add('bgm_runMirek');
+      this.bgMusic.setloop = true;
+      this.bgMusic.volume = .5;
+      this.bgMusic.play();
     }
 
     update() {
@@ -114,6 +120,7 @@ class Play extends Phaser.Scene {
       this.sammy.update();
       this.slug.update();
 
+      
       
       if(!this.gameOver) {
         this.Mirek.anims.play('MirekRun', 1, true);
@@ -157,6 +164,8 @@ class Play extends Phaser.Scene {
         this.isDucking= true;
         this.isPunching= false;
         this.isDodging=false;
+
+        this.sound.play('sfx_slide');
       }
 
       //dodge to run transition
@@ -179,6 +188,8 @@ class Play extends Phaser.Scene {
         this.isDucking= false;
         this.isPunching= true;
         this.isDodging=false;
+
+        this.sound.play('sfx_punch');
       }
 
       //punch to run transition
@@ -202,6 +213,8 @@ class Play extends Phaser.Scene {
         this.isDucking= false;
         this.isPunching= false;
         this.isDodging=true;
+
+        this.sound.play('sfx_whiff');
       }
 
       //dodge to run transition
@@ -213,6 +226,7 @@ class Play extends Phaser.Scene {
       
       if (this.checkCollision(this.Mirek, this.car) || this.checkCollision(this.Mirek, this.branch) || this.checkCollision(this.Mirek, this.slug) || this.checkCollision(this.Mirek, this.sammy)) {
         console.log('shmack')
+        this.bgMusic.stop();
         this.gameover();
       }
 

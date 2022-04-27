@@ -7,6 +7,11 @@ class Menu extends Phaser.Scene {
         this.load.image('menu', './assets/menu.png');
         this.load.image('tutorial', './assets/tutorial.png');
 
+        //audio files
+        this.load.audio('sfx_punch', './assets/sfx_punch.mp3');
+        this.load.audio('sfx_whiff', './assets/sfx_whiff.mp3');
+        this.load.audio('sfx_slide', './assets/sfx_slide.mp3');
+        this.load.audio('bgm_runMirek', './assets/RunMirek!.mp3');
     }
 
     create() {
@@ -19,10 +24,11 @@ class Menu extends Phaser.Scene {
 
         //define keys
         keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+
+
     }
 
     update() {
-       
         if(!this.tutorialDisplayed && Phaser.Input.Keyboard.JustDown(keySPACE)) {
             console.log("menu transition");
             //display tutorial, hide menu
@@ -30,10 +36,12 @@ class Menu extends Phaser.Scene {
             this.TitleScreen.alpha= 0;
             this.tutorialDisplayed= true;
             console.log(this.tutorialDisplayed);
+            
         }
         //if tutorial screen is showing check
         else if(this.tutorialDisplayed && Phaser.Input.Keyboard.JustDown(keySPACE)) {
             console.log("tutorial transition");
+
             this.scene.start('playScene');
         }      
     }
