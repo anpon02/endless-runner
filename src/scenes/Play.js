@@ -128,7 +128,7 @@ class Play extends Phaser.Scene {
 
         //looping bgm
       this.bgMusic = this.sound.add('bgm_runMirek');
-      this.bgMusic.setloop = true;
+      this.bgMusic.setloop(true);
       this.bgMusic.volume = .5;
       this.bgMusic.play();
     }
