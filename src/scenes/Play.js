@@ -4,8 +4,8 @@ class Play extends Phaser.Scene {
     }
 
     preload() {
-      this.load.image('backgroundtile', './assets/backgroundtile.png');
-      this.load.image('foregroundtile', './assets/foregroundtile.png');
+      this.load.image('backTrees', './assets/backTrees.png');
+      this.load.image('frontTrees', './assets/frontTrees.png');
       //this.load.image('mirek', './assets/mirek.png'); //replaced by MirekRunning
       this.load.spritesheet('MirekRun', './assets/MirekRunSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
       this.load.spritesheet('MirekJump', './assets/MirekJumpSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 6});
@@ -48,12 +48,16 @@ class Play extends Phaser.Scene {
       this.keyUP = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
       this.keyDOWN = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
 
+      //scorekeeping
+      this.highscore = 0;
       //speed will be updated over time to make the game more challenging
       this.speed= 2;
       
       //create backgrounds
-      this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backgroundtile').setOrigin(0, 0);
-      this.foregroundtile = this.add.tileSprite(0, gameheight-336, 640, 336, 'foregroundtile').setOrigin(0, 0);
+      this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backTrees').setOrigin(0, 0);
+      this.foregroundtile = this.add.tileSprite(0, 0, gamewidth, gameheight, 'frontTrees').setOrigin(0, 0);
+
+      this.displayscore = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
       
       //place mirek running anim; place everything else set alpha to 1
       /*this.Mirek = new Mirek(this, game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding, 'mirek', keyLEFT,
@@ -126,9 +130,9 @@ class Play extends Phaser.Scene {
       //game over flag
       this.gameOver = false;
 
-        //looping bgm
+      //looping bgm
       this.bgMusic = this.sound.add('bgm_runMirek');
-      this.bgMusic.setloop(true);
+      this.bgMusic.loop = true;
       this.bgMusic.volume = .5;
       this.bgMusic.play();
     }
