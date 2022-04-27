@@ -23,7 +23,7 @@ class Obstacles extends Phaser.GameObjects.Sprite {
     }
 
     updateSpeed(newSpeed){
-        this.moveSpeed= newSpeed;
+        this.moveSpeed = newSpeed;
     }
 
     go(){

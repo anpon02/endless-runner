@@ -96,10 +96,32 @@ class Play extends Phaser.Scene {
       this.isDodging=false;
 
       // Timed car spawning event
-      this.carSpawnEvent = this.time.addEvent({delay: 5000, callback: this.onEvent, callbackScope: this, loop: true});
+      this.carSpawnEvent = this.time.addEvent({delay: 5000, callback: () => { this.randNum= Math.floor(Math.random()*4);
+        if(this.randNum == 0){
+          this.car.go();
+        }
+        if(this.randNum == 1 ){
+          this.branch.go();
+        }
+        if(this.randNum == 2){
+          this.sammy.go();
+        }
+        if(this.randNum == 3){
+          this.slug.go();
+        }
+  
+        console.log("OBJ DEPLOYED:" + this.randNum);
+      }, callbackScope: this, loop: true});
 
       //Timed speed increase event
-      this.speedUp = this.time.addEvent({delay: 10000, callback: this.speedUp, callbackScope: this, loop: true});
+      this.speedUp = this.time.addEvent({delay: 10000, callback: () => {     
+        this.speed+= 1;
+        if(this.speed< 16){
+          this.car.updateSpeed(this.speed);
+          this.branch.updateSpeed(this.speed);
+          this.sammy.updateSpeed(this.speed);
+          this.slug.updateSpeed(this.speed);
+        }}, callbackScope: this, loop: true});
 
       //game over flag
       this.gameOver = false;
@@ -256,7 +278,7 @@ class Play extends Phaser.Scene {
       }
     }
     
-    onEvent(){
+    onEvent(event){
 
       this.randNum= Math.floor(Math.random()*4);
       if(this.randNum == 0){
@@ -289,6 +311,8 @@ class Play extends Phaser.Scene {
     gameover(){
       this.gameOver = true;
       console.log("game over, switching back to menu");
+      this.carSpawnEvent.remove();
+      this.speedUp.remove();
       this.scene.start('menuScene');
     }
   }
