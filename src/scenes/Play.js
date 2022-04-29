@@ -9,13 +9,15 @@ class Play extends Phaser.Scene {
       //this.load.image('mirek', './assets/mirek.png'); //replaced by MirekRunning
       this.load.spritesheet('MirekRun', './assets/MirekRunSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
       //this.load.image('mirekJumping', './assets/mirekJumping.png');
-      this.load.spritesheet('MirekJump', './assets/MirekJumpSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 6});
-      this.load.image('mirekDucking', './assets/mirekDucking.png');
-      // this.load.spritesheet('MirekDuck', './assets/MirekDuckSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: TBD});
+      this.load.spritesheet('MirekJump', './assets/MirekJumpingSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 6});
+      // this.load.image('mirekDucking', './assets/mirekDucking.png');
+      this.load.spritesheet('MirekDuck', './assets/MirekDuckSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
       this.load.image('mirekPunching', './assets/mirekPunching.png');
       // this.load.spritesheet('MirekPunch', './assets/MirekPunchSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: TBD});
       this.load.image('mirekDodging', './assets/mirekDodging.png');
       // this.load.spritesheet('MirekDodge', './assets/MirekDodgeSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: TBD});
+
+      // this.load.image('gameOver', './assets/gameoverscreen.png');
 
       this.load.image('car', './assets/car.png');
       this.load.image('branch', './assets/branch.png');
@@ -38,12 +40,12 @@ class Play extends Phaser.Scene {
         frames: this.anims.generateFrameNumbers('MirekJump', {start: 0, end: 3, first: 0}), frameRate: 3
       });
 
-      /*
       this.anims.create({
         key: 'MirekDuck',
-        frames: this.anims.generateFrameNumbers('MirekDuck', {start: 0, end: TBD, first: 0}), frameRate: TBD
+        frames: this.anims.generateFrameNumbers('MirekDuck', {start: 0, end: 3, first: 0}), frameRate: 6
       });
-
+      
+      /*
       this.anims.create({
         key: 'MirekPunch',
         frames: this.anims.generateFrameNumbers('MirekPunch', {start: 0, end: TBD, first: 0}), frameRate: TBD
@@ -53,6 +55,7 @@ class Play extends Phaser.Scene {
         key: 'MirekDodge',
         frames: this.anims.generateFrameNumbers('MirekDodge', {start: 0, end: TBD, first: 0}), frameRate: TBD
       });
+      */
 
       //define keys
       this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -69,6 +72,10 @@ class Play extends Phaser.Scene {
       //create backgrounds
       this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backTrees').setOrigin(0, 0);
       this.foregroundtile = this.add.tileSprite(0, 0, gamewidth, gameheight, 'frontTrees').setOrigin(0, 0);
+
+      // this.gameOverscreen = this.add.tileSprite(0, 0, gamewidth, gameheight, 'gameOver').setOrigin(0, 0);
+      // this.gameOverscreen.alpha = 0;
+      // this.gameoverDisplayed = false;
 
       this.displayscore = this.add.text(16, 16, 'score: ', { fontSize: '32px', fill: '#000' });
       
@@ -152,7 +159,7 @@ class Play extends Phaser.Scene {
       this.bgMusic.play();
     }
 
-    update(timer, delta) {
+    update() {
       this.backgroundsprite.tilePositionX += this.speed/4;
       this.foregroundtile.tilePositionX += this.speed;
 
@@ -160,11 +167,18 @@ class Play extends Phaser.Scene {
       this.branch.update();
       this.sammy.update();
       this.slug.update();
-   
-      
+
+      /*
+      if(this.gameOver && this.gameoverDisplayed && Phaser.Input.Keyboard.JustDown(this.keySPACE)) {
+        this.scene.start('menuScene')
+      }
+
+      */
+
       if(!this.gameOver) {
         this.Mirek.anims.play('MirekRun', 1, true);
         this.MirekJumping.anims.play('MirekJump', 1, true);
+        this.MirekDucking.anims.play('MirekDuck', 1, true);
         this.countdown -= 250;
       }
 
@@ -339,14 +353,15 @@ class Play extends Phaser.Scene {
     }
 
     speedUp(){
-      this.speed+= 1;
-      if(this.speed< 16){
-        this.car.updateSpeed(this.speed);
-        this.branch.updateSpeed(this.speed);
-        this.sammy.updateSpeed(this.speed);
-        this.slug.updateSpeed(this.speed);
+      if(!this.gameOver) {
+        this.speed+= 1;
+        if(this.speed< 16){
+          this.car.updateSpeed(this.speed);
+          this.branch.updateSpeed(this.speed);
+          this.sammy.updateSpeed(this.speed);
+          this.slug.updateSpeed(this.speed);
+        }
       }
-      
     }
 
     gameover(){
@@ -355,7 +370,8 @@ class Play extends Phaser.Scene {
       this.carSpawnEvent.remove();
       this.speedUp.remove();
       this.scene.start('menuScene');
-      // replace ^ with alpha = 1 of Gameover sprite 
-      // add text high score alpha = 1
+      // this.speed = 0;
+      // this.gameOverscreen.alpha = 1;
+      // this.gameoverDisplayed = true;
     }
   }
