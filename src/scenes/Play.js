@@ -63,6 +63,7 @@ class Play extends Phaser.Scene {
 
       //scorekeeping
       this.highscore = 0;
+      
       //speed will be updated over time to make the game more challenging
       this.speed= 2;
       
@@ -70,8 +71,10 @@ class Play extends Phaser.Scene {
       this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backTrees').setOrigin(0, 0);
       this.foregroundtile = this.add.tileSprite(0, 0, gamewidth, gameheight, 'frontTrees').setOrigin(0, 0);
 
+      //display score
       this.displayscore = this.add.text(16, 16, 'score: ', { fontSize: '32px', fill: '#000' });
       
+      //place Mirek
       this.Mirek = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,'MirekRun').setOrigin(0.5, 0);
 
       //add alt animations
@@ -104,6 +107,10 @@ class Play extends Phaser.Scene {
       this.gameOverscreen = this.add.tileSprite(0, 0, gamewidth, gameheight, 'gameOver').setOrigin(0, 0);
       this.gameOverscreen.alpha = 0;
       this.gameoverDisplayed = false;
+
+      //game over screen score display
+      this.gameoverscore = this.add.text(16, 240, 'score: ', { fontSize: '32px', fill: '#000' });
+      this.gameoverscore.alpha = 0;
 
       //define vars
       this.isJumping= false;
@@ -361,7 +368,9 @@ class Play extends Phaser.Scene {
       this.speedUp.remove();
       // this.scene.start('menuScene');
       this.speed = 0;
+      this.gameoverscore.setText('score: ' + this.highscore);
       this.gameOverscreen.alpha = 1;
+      this.gameoverscore.alpha = 1;
       this.gameoverDisplayed = true;
     }
   }
