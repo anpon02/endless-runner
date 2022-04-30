@@ -12,19 +12,17 @@ class Play extends Phaser.Scene {
       this.load.spritesheet('MirekJump', './assets/MirekJumpingSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 6});
       // this.load.image('mirekDucking', './assets/mirekDucking.png');
       this.load.spritesheet('MirekDuck', './assets/MirekDuckSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
-      this.load.image('mirekPunching', './assets/mirekPunching.png');
-      // this.load.spritesheet('MirekPunch', './assets/MirekPunchSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: TBD});
-      this.load.image('mirekDodging', './assets/mirekDodging.png');
-      // this.load.spritesheet('MirekDodge', './assets/MirekDodgeSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: TBD});
+      //this.load.image('mirekPunching', './assets/mirekPunching.png');
+      this.load.spritesheet('MirekPunch', './assets/MirekPunchSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
+      //this.load.image('mirekDodging', './assets/mirekDodging.png');
+      this.load.spritesheet('MirekDodge', './assets/MirekDodgeSpritesheet.png', {frameWidth: 123, frameHeight: 164, startFrame: 0, endFrame: 3});
 
-      // this.load.image('gameOver', './assets/gameoverscreen.png');
+      this.load.image('gameOver', './assets/gameover.png');
 
       this.load.image('car', './assets/car.png');
       this.load.image('branch', './assets/branch.png');
       this.load.image('sammy', './assets/sammy.png');
       this.load.image('slug', './assets/slug.png')
-
-
 
     }
     
@@ -37,7 +35,7 @@ class Play extends Phaser.Scene {
 
       this.anims.create({
         key: 'MirekJump',
-        frames: this.anims.generateFrameNumbers('MirekJump', {start: 0, end: 3, first: 0}), frameRate: 3
+        frames: this.anims.generateFrameNumbers('MirekJump', {start: 0, end: 3, first: 0}), frameRate: 12
       });
 
       this.anims.create({
@@ -45,17 +43,16 @@ class Play extends Phaser.Scene {
         frames: this.anims.generateFrameNumbers('MirekDuck', {start: 0, end: 3, first: 0}), frameRate: 6
       });
       
-      /*
       this.anims.create({
         key: 'MirekPunch',
-        frames: this.anims.generateFrameNumbers('MirekPunch', {start: 0, end: TBD, first: 0}), frameRate: TBD
+        frames: this.anims.generateFrameNumbers('MirekPunch', {start: 0, end: 3, first: 0}), frameRate: 6
       });
 
       this.anims.create({
         key: 'MirekDodge',
-        frames: this.anims.generateFrameNumbers('MirekDodge', {start: 0, end: TBD, first: 0}), frameRate: TBD
+        frames: this.anims.generateFrameNumbers('MirekDodge', {start: 0, end: 3, first: 0}), frameRate: 6
       });
-      */
+    
 
       //define keys
       this.keySPACE = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
@@ -73,17 +70,7 @@ class Play extends Phaser.Scene {
       this.backgroundsprite = this.add.tileSprite(0, 0, gamewidth, gameheight, 'backTrees').setOrigin(0, 0);
       this.foregroundtile = this.add.tileSprite(0, 0, gamewidth, gameheight, 'frontTrees').setOrigin(0, 0);
 
-      // this.gameOverscreen = this.add.tileSprite(0, 0, gamewidth, gameheight, 'gameOver').setOrigin(0, 0);
-      // this.gameOverscreen.alpha = 0;
-      // this.gameoverDisplayed = false;
-
       this.displayscore = this.add.text(16, 16, 'score: ', { fontSize: '32px', fill: '#000' });
-      
-      //place mirek running anim; place everything else set alpha to 1
-      /*this.Mirek = new Mirek(this, game.config.width/5.5, game.config.height/1.5 - borderUISize - borderPadding, 'mirek', keyLEFT,
-          keyRIGHT, keyUP, keyDOWN).setOrigin(0.5, 0);
-      console.log("mirek placed"); 
-      commented out because I think we can make the game work without a Mirek Class*/
       
       this.Mirek = this.add.sprite(game.config.width/5.5, game.config.height/1.6 - borderUISize - borderPadding,'MirekRun').setOrigin(0.5, 0);
 
@@ -112,6 +99,11 @@ class Play extends Phaser.Scene {
 
       this.slug= new Obstacles(this, game.config.width, game.config.height/1.2  - borderUISize - borderPadding, 'slug', 0, 'Slug').setOrigin(0,0);
       console.log("slug PLACED");
+
+      //game over screen
+      this.gameOverscreen = this.add.tileSprite(0, 0, gamewidth, gameheight, 'gameOver').setOrigin(0, 0);
+      this.gameOverscreen.alpha = 0;
+      this.gameoverDisplayed = false;
 
       //define vars
       this.isJumping= false;
@@ -168,17 +160,16 @@ class Play extends Phaser.Scene {
       this.sammy.update();
       this.slug.update();
 
-      /*
       if(this.gameOver && this.gameoverDisplayed && Phaser.Input.Keyboard.JustDown(this.keySPACE)) {
         this.scene.start('menuScene')
       }
-
-      */
 
       if(!this.gameOver) {
         this.Mirek.anims.play('MirekRun', 1, true);
         this.MirekJumping.anims.play('MirekJump', 1, true);
         this.MirekDucking.anims.play('MirekDuck', 1, true);
+        this.MirekPunching.anims.play('MirekPunch', 1, true);
+        this.MirekDodging.anims.play('MirekDodge', 1, true);
         this.countdown -= 250;
       }
 
@@ -194,7 +185,6 @@ class Play extends Phaser.Scene {
       if(Phaser.Input.Keyboard.JustDown(this.keyUP) && !Phaser.Input.Keyboard.JustDown(this.keyRIGHT) && !Phaser.Input.Keyboard.JustDown(this.keyLEFT) && !Phaser.Input.Keyboard.JustDown(this.keyDOWN)){
         this.Mirek.alpha= 0;
         this.MirekJumping.alpha=1;
-        //this.MirekJumping.anims.play('MirekJump', 1, true);
         this.MirekDucking.alpha= 0;
         this.MirekPunching.alpha=0;
         this.MirekDodging.alpha=0;
@@ -369,9 +359,9 @@ class Play extends Phaser.Scene {
       console.log("game over, switching back to menu");
       this.carSpawnEvent.remove();
       this.speedUp.remove();
-      this.scene.start('menuScene');
-      // this.speed = 0;
-      // this.gameOverscreen.alpha = 1;
-      // this.gameoverDisplayed = true;
+      // this.scene.start('menuScene');
+      this.speed = 0;
+      this.gameOverscreen.alpha = 1;
+      this.gameoverDisplayed = true;
     }
   }
