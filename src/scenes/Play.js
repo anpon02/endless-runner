@@ -156,7 +156,13 @@ class Play extends Phaser.Scene {
       this.bgMusic.loop = true;
       this.bgMusic.volume = .5;
       this.bgMusic.play();
+
+      //looping jump/fly
+      this.flutter = this.sound.add('sfx_flutter');
+      this.flutter.loop = true;
+      this.flutter.volume = .3;
     }
+
 
     update() {
       this.backgroundsprite.tilePositionX += this.speed/4;
@@ -201,6 +207,9 @@ class Play extends Phaser.Scene {
         this.isDucking= false;
         this.isPunching= false;
         this.isDodging=false;
+
+        //play sfx 
+        this.flutter.play();
       }
 
       //jump to run transition
@@ -208,6 +217,11 @@ class Play extends Phaser.Scene {
         this.Mirek.alpha= 1;
         this.MirekJumping.alpha=0;
         this.isJumping= false;
+        this.flutter.stop();
+      }
+
+      if (Phaser.Input.Keyboard.JustUp(this.keyUP)){
+        this.flutter.stop();
       }
 
       //duck

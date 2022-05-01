@@ -12,6 +12,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_whiff', './assets/sfx_whiff.mp3');
         this.load.audio('sfx_slide', './assets/sfx_slide.mp3');
         this.load.audio('bgm_runMirek', './assets/RunMirek!.mp3');
+        this.load.audio('sfx_flutter', './assets/sfx_flutter.mp3');
     }
 
     create() {
