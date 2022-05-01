@@ -13,6 +13,7 @@ class Menu extends Phaser.Scene {
         this.load.audio('sfx_slide', './assets/sfx_slide.mp3');
         this.load.audio('bgm_runMirek', './assets/RunMirek!.mp3');
         this.load.audio('sfx_flutter', './assets/sfx_flutter.mp3');
+        this.load.audio('sfx_spacebar', './assets/sfx_spacebar.wav');
     }
 
     create() {
@@ -37,12 +38,13 @@ class Menu extends Phaser.Scene {
             this.TitleScreen.alpha= 0;
             this.tutorialDisplayed= true;
             console.log(this.tutorialDisplayed);
+            this.sound.play('sfx_spacebar');
             
         }
         //if tutorial screen is showing check
         else if(this.tutorialDisplayed && Phaser.Input.Keyboard.JustDown(keySPACE)) {
             console.log("tutorial transition");
-
+            this.sound.play('sfx_spacebar');
             this.scene.start('playScene');
         }      
     }
