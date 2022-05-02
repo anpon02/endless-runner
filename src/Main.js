@@ -1,3 +1,19 @@
+/*
+Made by: 
+Vincent (Tatum) Going
+Ankie Pon
+Giovanni Smith
+Kennedy Thomas
+
+Programming Brag: Instead of doing the easy thing and using Arcade Physics Vincent went big mode and implimented a unique method of
+deploying obstacles randomly and tracking collisions. Ankie also implimented a score tracking system that goes kinda crazy. 
+
+Visual Style Brag: Our boy Giovanni made some absolutely banging tunes for this game and we are so proud of him. We also
+are super proud of Kennedy's animations, they look really good and do our boy Mirek justice. Overall we are happy with 
+what we accomplished visually and think our visual style compliments the game's lighthearted aesthetic. (playtesters agree!)
+*/
+
+
 let config = {
     type: Phaser.CANVAS,
     width: 640,
