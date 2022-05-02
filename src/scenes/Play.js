@@ -161,6 +161,14 @@ class Play extends Phaser.Scene {
       this.flutter = this.sound.add('sfx_flutter');
       this.flutter.loop = true;
       this.flutter.volume = .3;
+
+      this.gameoverSFX = 0;
+
+      this.whiff = this.sound.add('sfx_whiff');
+      this.whiff.volume = 5; 
+
+      this.GOSFX = this.sound.add('sfx_gameover1');
+      this.GOSFX.volume = .5;
     }
 
 
@@ -288,7 +296,7 @@ class Play extends Phaser.Scene {
         this.isPunching= false;
         this.isDodging=true;
 
-        this.sound.play('sfx_whiff');
+        this.whiff.play();
       }
 
       //dodge to run transition
@@ -299,9 +307,13 @@ class Play extends Phaser.Scene {
       }
       
       if (this.checkCollision(this.Mirek, this.car) || this.checkCollision(this.Mirek, this.branch) || this.checkCollision(this.Mirek, this.slug) || this.checkCollision(this.Mirek, this.sammy)) {
-        console.log('shmack')
+        console.log('shmack');
         this.bgMusic.stop();
-        this.gameover();
+        if (this.gameoverSFX != 1){
+          this.GOSFX.play();
+          this.gameoverSFX = 1;
+          this.gameover();
+        }
       }
 
       
