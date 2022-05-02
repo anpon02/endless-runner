@@ -5,6 +5,10 @@ Ankie Pon
 Giovanni Smith
 Kennedy Thomas
 
+Game Title: Run, Mirek, Run!
+
+Date Completed: May 2, 2022
+
 Programming Brag: Instead of doing the easy thing and using Arcade Physics Vincent went big mode and implimented a unique method of
 deploying obstacles randomly and tracking collisions. Ankie also implimented a score tracking system that goes kinda crazy. 
 
